@@ -57,8 +57,9 @@
         {% endif %}
         <form method="POST">
             {% csrf_token %}
-            <input type="text" class="form-control" name="felhasznalonev" placeholder="Felhasználónév">
-            <input type="password" class="form-control" name="jelszo" placeholder="Jelszó">
+            <input type="hidden" name="next" value="{{ next }}">
+            <input type="text" class="form-control" name="felhasznalonev" placeholder="Felhasználónév" required>
+            <input type="password" class="form-control" name="jelszo" placeholder="Jelszó" required>
             <button type="submit">Bejelentkezés</button>
         </form>
     </div>

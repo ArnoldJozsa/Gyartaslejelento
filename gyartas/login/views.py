@@ -5,12 +5,12 @@ def login_view(request):
     if request.method == "POST":
         felhasznalonev = request.POST.get("felhasznalonev")
         jelszo = request.POST.get("jelszo")
+        next_url = request.POST.get("next") or '/main'
 
-        # Kapcsolódás a MySQL adatbázishoz
         conn = pymysql.connect(
             host='localhost',
             user='root',
-            password='12345',  # ide a MySQL jelszavad
+            password='12345',
             database='gyartas_db'
         )
         cursor = conn.cursor()
@@ -22,12 +22,18 @@ def login_view(request):
         conn.close()
 
         if user:
-            # Ellenőrizzük, hogy admin vagy sima felhasználó
-            if felhasznalonev == "adminuser":
-                return redirect('admin_home')  # admin felület
-            else:
-                return redirect('main')  # main oldal
-        else:
-            return render(request, 'login/login.html', {'error': 'Hibás felhasználónév vagy jelszó'})
+            request.session['felhasznalonev'] = felhasznalonev
+            request.session['is_authenticated'] = True
 
-    return render(request, 'login/login.html')
+            if felhasznalonev == "adminuser":
+                return redirect('/admin-panel/')
+            else:
+                return redirect(next_url)
+        else:
+            return render(request, 'login/login.html', {
+                'error': 'Hibás felhasználónév vagy jelszó',
+                'next': next_url
+            })
+
+    next_url = request.GET.get('next', '/main')
+    return render(request, 'login/login.html', {'next': next_url})

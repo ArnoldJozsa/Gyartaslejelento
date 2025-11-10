@@ -1,6 +1,6 @@
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
 
-@login_required(login_url='/login/')
-def index(request):
-    return render(request, 'main/main.html') 
+def main_view(request):
+    if not request.session.get('is_authenticated'):
+        return redirect('/login/')
+    return render(request, 'main/main.html')

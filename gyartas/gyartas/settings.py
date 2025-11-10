@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'gyartas.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'gyartas_db',
         'USER' : 'root',
         'PASSWORD' : '12345',

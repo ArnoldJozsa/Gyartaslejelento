@@ -1,0 +1,34 @@
+{% extends 'main/base.html' %}
+{% load tz %}
+
+{% block content %}
+<h1 style="margin-bottom: 25px; color:#1E3A8A;">
+    Művelet lejelentése – {{ sor.muvelet.megnevezes }}
+</h1>
+
+<div class="table-card" style="max-width: 500px; margin: 0 auto;">
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label>Bemenő darab:</label>
+            <input type="number" value="{{ bemeno }}" readonly class="input-field" style="background:#E5E7EB; cursor:not-allowed;">
+        </div>
+
+        <div class="form-group">
+            <label>Jó darab:</label>
+            <input type="number" name="jo" required class="input-field">
+        </div>
+
+        <div class="form-group">
+            <label>Selejt darab:</label>
+            <input type="number" name="selejt" required class="input-field">
+        </div>
+
+        <button type="submit" class="btn-primary" style="width:100%; margin-top: 15px;">
+            <i class="fa-solid fa-check"></i> Mentés
+        </button>
+    </form>
+</div>
+
+{% endblock %}

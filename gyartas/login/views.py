@@ -1,39 +1,56 @@
 from django.shortcuts import render, redirect
-import pymysql
+from django.contrib.auth.hashers import check_password
+from login.models import Felhasznalo
 
 def login_view(request):
     if request.method == "POST":
-        felhasznalonev = request.POST.get("felhasznalonev")
+        azonosito = request.POST.get("felhasznalonev")
         jelszo = request.POST.get("jelszo")
-        next_url = request.POST.get("next") or '/main'
 
-        conn = pymysql.connect(
-            host='localhost',
-            user='root',
-            password='12345',
-            database='gyartas_db'
-        )
-        cursor = conn.cursor()
-        cursor.execute(
-            "SELECT * FROM felhasznalok WHERE felhasznalonev=%s AND jelszo=%s",
-            (felhasznalonev, jelszo)
-        )
-        user = cursor.fetchone()
-        conn.close()
+        try:
+            user = Felhasznalo.objects.get(vonalkod=azonosito)
 
-        if user:
-            request.session['felhasznalonev'] = felhasznalonev
+            request.session['user_id'] = user.felhasznalo_id
+            request.session['szerepkor'] = user.szerepkor
             request.session['is_authenticated'] = True
+            request.session['felhasznalonev'] = user.felhasznalonev
 
-            if felhasznalonev == "adminuser":
+            
+            if user.szerepkor == 'admin':
                 return redirect('/admin-panel/')
+            elif user.szerepkor == 'vezeto':
+                return redirect('/vezeto/')
             else:
-                return redirect(next_url)
-        else:
-            return render(request, 'login/login.html', {
-                'error': 'Hibás felhasználónév vagy jelszó',
-                'next': next_url
-            })
+                return redirect('/operator/')
 
-    next_url = request.GET.get('next', '/main')
-    return render(request, 'login/login.html', {'next': next_url})
+        except Felhasznalo.DoesNotExist:
+            pass
+
+        try:
+            user = Felhasznalo.objects.get(felhasznalonev=azonosito)
+        except Felhasznalo.DoesNotExist:
+            return render(request, 'login/login.html', {'error': 'Hibás felhasználónév vagy vonalkód'})
+
+        if check_password(jelszo, user.jelszo):
+
+            request.session['user_id'] = user.felhasznalo_id
+            request.session['szerepkor'] = user.szerepkor
+            request.session['is_authenticated'] = True
+            request.session['felhasznalonev'] = user.felhasznalonev
+
+            if user.szerepkor == 'admin':
+                return redirect('/admin-panel/')
+            elif user.szerepkor == 'vezeto':
+                return redirect('/vezeto/')
+            else:
+                return redirect('/operator/')
+
+        else:
+            return render(request, 'login/login.html', {'error': 'Hibás jelszó'})
+
+    return render(request, 'login/login.html')
+
+
+def logout_view(request):
+    request.session.flush()  
+    return redirect('/login/')

@@ -1,0 +1,44 @@
+{% extends 'main/base.html' %}
+{% load tz %}
+
+{% block content %}
+<h1>Receptúrák</h1>
+
+<a href="/admin-panel/recept/uj/" class="btn-primary">
+    <i class="fa-solid fa-plus"></i> Új recept
+</a>
+
+<div class="table-card">
+<table>
+    <tr>
+        <th>ID</th>
+        <th><i class="fa-solid fa-box"></i> Késztermék</th>
+        <th><i class="fa-solid fa-percent"></i> Anyaghányad</th>
+        <th>Művelet</th>
+    </tr>
+
+    {% for r in receptek %}
+    <tr>
+        <td>{{ r.recept_id }}</td>
+
+        <td>{{ r.kesztermek_cikkszam.megnevezes }}</td>
+
+        <td>
+            <span class="badge badge-green">{{ r.anyaghanyad }}</span>
+        </td>
+
+        <td>
+            <a href="/admin-panel/recept/{{ r.recept_id }}/" class="btn-table edit">
+                <i class="fa-solid fa-folder-open"></i> Megnyitás
+            </a>
+
+            <a href="/admin-panel/recept/{{ r.recept_id }}/torol/" class="btn-table delete">
+                <i class="fa-solid fa-trash"></i> Törlés
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+</div>
+
+{% endblock %}

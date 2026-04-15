@@ -1,0 +1,40 @@
+{% extends 'main/base.html' %}
+{% load tz %}
+
+{% block content %}
+<h1>Cikkek kezelése</h1>
+
+<a href="/admin-panel/cikkek/uj/" style="
+    background:#3B82F6;
+    color:white;
+    padding:8px 16px;
+    border-radius:4px;
+    text-decoration:none;
+">Új cikk hozzáadása</a>
+
+<br><br>
+
+<table style="width:100%; border-collapse: collapse;">
+    <tr style="background:#1E3A8A; color:white;">
+        <th style="padding:8px; border:1px solid #ccc;">Cikkszám</th>
+        <th style="padding:8px; border:1px solid #ccc;">Megnevezés</th>
+        <th style="padding:8px; border:1px solid #ccc;">Típus</th>
+        <th style="padding:8px; border:1px solid #ccc;">Minőség</th>
+        <th style="padding:8px; border:1px solid #ccc;">Magasság</th>
+        <th style="padding:8px; border:1px solid #ccc;">Szélesség</th>
+        <th style="padding:8px; border:1px solid #ccc;">Hosszúság</th>
+    </tr>
+
+    {% for c in cikkek %}
+    <tr>
+        <td style="padding:8px; border:1px solid #ccc;">{{ c.cikkszam }}</td>
+        <td style="padding:8px; border:1px solid #ccc;">{{ c.megnevezes }}</td>
+        <td style="padding:8px; border:1px solid #ccc;">{{ c.tipus }}</td>
+        <td style="padding:8px; border:1px solid #ccc;">{{ c.minoseg|default:"-" }}</td>
+        <td style="padding:8px; border:1px solid #ccc;">{{ c.magassag|default:"-" }}</td>
+        <td style="padding:8px; border:1px solid #ccc;">{{ c.szelesseg|default:"-" }}</td>
+        <td style="padding:8px; border:1px solid #ccc;">{{ c.hosszusag|default:"-" }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

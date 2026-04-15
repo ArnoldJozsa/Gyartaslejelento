@@ -1,0 +1,71 @@
+{% extends 'main/base.html' %}
+{% load tz %}
+
+{% block content %}
+<h1>Új partner</h1>
+
+<div class="form-card">
+<form method="POST">
+    {% csrf_token %}
+
+    <div class="form-group">
+        <label>Név:</label>
+        <input type="text" name="partner_nev" id="partner_nev" required>
+    </div>
+
+    <div class="form-group">
+        <label>Adószám:</label>
+        <div style="display:flex; gap:10px;">
+            <input type="text" name="adoszam" id="adoszam" style="flex:1;">
+            <button type="button" class="btn-secondary" onclick="navLekerdezes()">
+                <i class="fa-solid fa-magnifying-glass"></i> Lekérdezés
+            </button>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Cím:</label>
+        <input type="text" name="cim" id="cim">
+    </div>
+
+    <div class="form-group">
+        <label>Email:</label>
+        <input type="email" name="email">
+    </div>
+
+    <div class="form-group">
+        <label>Telefon:</label>
+        <input type="text" name="telefonszam">
+    </div>
+
+    <button type="submit" class="btn-primary">
+        <i class="fa-solid fa-save"></i> Mentés
+    </button>
+
+</form>
+</div>
+
+<a href="/admin-panel/partnerek/" class="btn-secondary" style="margin-top:20px; display:inline-block;">
+    <i class="fa-solid fa-arrow-left"></i> Vissza a listához
+</a>
+
+<script>
+function navLekerdezes() {
+    let adoszam = document.getElementById("adoszam").value;
+
+    fetch(`/cegjegyzek-lekerdezes/${adoszam}/`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+            document.getElementById("partner_nev").value = data.cegnev;
+            document.getElementById("cim").value = data.cim;
+        })
+        .catch(err => alert("Hiba történt a lekérdezés során."));
+}
+
+</script>
+
+{% endblock %}

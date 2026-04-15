@@ -1,0 +1,80 @@
+{% extends 'main/base.html' %}
+{% load tz %}
+
+{% block content %}
+<h1>Gyártás részletei</h1>
+
+<a href="/vezeto/gyartasok/" style="
+    display:inline-block;
+    margin-bottom:15px;
+    text-decoration:none;
+    background:#ddd;
+    padding:6px 12px;
+    border-radius:4px;
+">← Vissza</a>
+
+{% if error %}
+    <div style="background:#ffdddd; padding:10px; border:1px solid red; margin-bottom:10px;">
+        {{ error }}
+    </div>
+{% endif %}
+
+<h3>Késztermék: {{ gyartas.kesztermek_cikkszam.megnevezes }}</h3>
+<h3>Partner: {{ gyartas.partner.partner_nev }}</h3>
+<h3>Mennyiség: {{ gyartas.tervezett_mennyiseg }} db</h3>
+<h3>Státusz: {{ gyartas.statusz }}</h3>
+
+{% if gyartas.statusz == 'tervezett' %}
+    <a href="/vezeto/gyartas/{{ gyartas.gyartas_id }}/indit/" style="
+        background:#3B82F6;
+        color:white;
+        padding:8px 16px;
+        border-radius:4px;
+        text-decoration:none;
+        display:inline-block;
+        margin-bottom:15px;
+    ">Gyártás indítása</a>
+{% endif %}
+
+{% if gyartas.statusz == 'engedelyezett' %}
+    <a href="/vezeto/gyartas/{{ gyartas.gyartas_id }}/lezar/" style="
+        background:#EF4444;
+        color:white;
+        padding:8px 16px;
+        border-radius:4px;
+        text-decoration:none;
+        display:inline-block;
+        margin-bottom:15px;
+    ">Gyártás lezárása</a>
+{% endif %}
+
+{% if gyartas.statusz == 'lezart' and gyartas.jo_mennyiseg == 0 %}
+    <a href="/vezeto/gyartas/{{ gyartas.gyartas_id }}/lejelentes/" style="
+        background:#10B981;
+        color:white;
+        padding:8px 16px;
+        border-radius:4px;
+        text-decoration:none;
+        display:inline-block;
+        margin-bottom:15px;
+    ">Gyártás lejelentése</a>
+{% endif %}
+
+
+<h2>Műveletek</h2>
+
+<table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse; width:100%;">
+    <tr style="background:#f0f0f0;">
+        <th>Sorrend</th>
+        <th>Művelet</th>
+    </tr>
+
+    {% for s in sorok %}
+    <tr>
+        <td>{{ s.sorrend }}</td>
+        <td>{{ s.muvelet.megnevezes }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

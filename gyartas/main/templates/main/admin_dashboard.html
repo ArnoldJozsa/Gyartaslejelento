@@ -1,0 +1,277 @@
+{% extends 'main/base.html' %}
+{% load tz %}
+
+{% block content %}
+
+<h1>Admin felület</h1>
+
+
+<div class="user-card">
+    <h2>Üdv, {{ request.session.felhasznalonev }} Admin!</h2>
+    <p><strong>Szerepkör:</strong> Admin</p>
+</div>
+
+
+{% if figyelmeztetesek %}
+<div class="alert-box">
+    <h3>⚠️ Rendszer figyelmeztetések</h3>
+    <ul>
+        {% for f in figyelmeztetesek %}
+            <li>{{ f }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+{% if alacsony_keszlet %}
+<div style="
+    background:#FEE2E2;
+    border:1px solid #EF4444;
+    padding:15px;
+    border-radius:6px;
+    margin-bottom:20px;
+">
+    <strong style="color:#B91C1C; font-size:16px;">
+        ⚠ Alacsony készlet figyelmeztetés
+    </strong>
+    <p style="margin-top:8px;">
+        Az alábbi alapanyagok készlete kritikus szint alá csökkent:
+    </p>
+
+    <ul style="margin-top:10px;">
+        {% for k in alacsony_keszlet %}
+        <li style="color:#B91C1C; font-weight:bold;">
+            {{ k.cikk.megnevezes }} – {{ k.mennyiseg }}
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+
+
+<h2>📊 Rendszer összesítések</h2>
+<div class="stats-container">
+    <div class="stat-card blue">
+        <h4>Felhasználók</h4>
+        <p>{{ user_count }}</p>
+    </div>
+
+    <div class="stat-card green">
+        <h4>Gyártások összesen</h4>
+        <p>{{ gyartas_count }}</p>
+    </div>
+
+    <div class="stat-card yellow">
+        <h4>Aktív gyártások</h4>
+        <p>{{ aktiv_gyartasok }}</p>
+    </div>
+
+    <div class="stat-card red">
+        <h4>Lezárt gyártások</h4>
+        <p>{{ lezart_gyartasok }}</p>
+    </div>
+</div>
+
+
+<h2>🏭 Termelési összesítések</h2>
+<div class="stats-container">
+    <div class="stat-card green">
+        <h4>Mai jó darabok</h4>
+        <p>{{ jo_ma }}</p>
+    </div>
+
+    <div class="stat-card red">
+        <h4>Mai selejt</h4>
+        <p>{{ selejt_ma }}</p>
+    </div>
+
+    <div class="stat-card blue">
+        <h4>Heti jó darabok</h4>
+        <p>{{ jo_heti }}</p>
+    </div>
+
+    <div class="stat-card yellow">
+        <h4>Heti selejt</h4>
+        <p>{{ selejt_heti }}</p>
+    </div>
+</div>
+
+
+<div class="stat-card wide orange">
+    <h4>Selejt arány ma</h4>
+    <p>{{ selejt_arany }}%</p>
+</div>
+
+
+<h2>🏆 Top partnerek</h2>
+<div class="ranking-container">
+
+    <div class="ranking-box">
+        <h3>Legtöbb gyártás</h3>
+        <ul>
+            {% for p in top_partnerek %}
+                <li>{{ p.partner__partner_nev }} – {{ p.db }} gyártás</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="ranking-box">
+        <h3>Legnagyobb jó darab mennyiség</h3>
+        <ul>
+            {% for p in top_partnerek_jo %}
+                <li>{{ p.gyartas__partner__partner_nev }} – {{ p.osszes_jo }} db</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="ranking-box">
+        <h3>Legtöbb selejt</h3>
+        <ul>
+            {% for p in top_partnerek_selejt %}
+                <li>{{ p.gyartas__partner__partner_nev }} – {{ p.osszes_selejt }} db</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+</div>
+
+
+<h2>🏆 Operátor teljesítmény rangsor</h2>
+
+<div class="ranking-container">
+
+    <div class="ranking-box">
+        <h3>Legjobb teljesítményű operátorok</h3>
+        <ul>
+            {% for o in top_jo %}
+                <li>{{ o.felhasznalo__felhasznalonev }} – {{ o.osszes_jo }} db</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="ranking-box">
+        <h3>Selejtarány szerinti rangsor</h3>
+        <ul>
+            {% for o in top_selejt %}
+                <li>{{ o.felhasznalo__felhasznalonev }} – {{ o.osszes_selejt }} db</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="ranking-box">
+        <h3>Legaktívabb operátorok</h3>
+        <ul>
+            {% for o in top_aktiv %}
+                <li>{{ o.felhasznalo__felhasznalonev }} – {{ o.db }} lejelentés</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+</div>
+
+
+<h2>⚙️ Admin funkciók</h2>
+<div class="menu-container">
+    <a href="/operator/gyartasok/" class="menu-item">📋 Gyártások listája</a>
+    <a href="/operator/riport/" class="menu-item">📈 Napi riport</a>
+    <a href="/vezeto/gyartasok/" class="menu-item">🏭 Gyártások kezelése</a>
+    <a href="/admin-panel/cikkek/" class="menu-item">📦 Cikkek kezelése</a>
+    <a href="/admin-panel/cikkek/uj/" class="menu-item">➕ Új cikk hozzáadása</a>
+    <a href="/admin-panel/muveletek/" class="menu-item">🛠️ Műveletek kezelése</a>
+</div>
+
+<div class="illustration">⚙️</div>
+
+<style>
+    .user-card {
+        background: #f3f6ff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 25px;
+    }
+
+    .alert-box {
+        background: #fee2e2;
+        border-left: 5px solid #dc2626;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+    }
+
+    .stats-container {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .stat-card {
+        flex: 1;
+        padding: 20px;
+        border-radius: 10px;
+        color: white;
+        text-align: center;
+        font-weight: bold;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .stat-card.wide {
+        margin-bottom: 30px;
+        width: 100%;
+    }
+
+    .stat-card.blue { background: #3b82f6; }
+    .stat-card.red { background: #ef4444; }
+    .stat-card.yellow { background: #f59e0b; }
+    .stat-card.green { background: #10b981; }
+    .stat-card.orange { background: #fb923c; }
+
+    .ranking-container {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .ranking-box {
+        flex: 1;
+        background:  #3b82f6 ;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .ranking-box ul {
+        padding-left: 20px;
+    }
+
+    .menu-container {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+    .menu-item {
+        background: #e5e7eb97;
+        padding: 15px;
+        border-radius: 8px;
+        font-size: 18px;
+        text-decoration: none;
+        color: #111827;
+        font-weight: 600;
+        transition: 0.2s;
+    }
+
+    .menu-item:hover {
+        background: #d1d5db;
+    }
+
+    .illustration {
+        font-size: 80px;
+        text-align: center;
+        opacity: 0.25;
+        margin-top: 20px;
+    }
+</style>
+
+{% endblock %}

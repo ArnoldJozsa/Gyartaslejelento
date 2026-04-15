@@ -1,0 +1,20 @@
+{% extends 'main/base.html' %}
+{% load tz %}
+
+{% block content %}
+<h1>Művelet szerkesztése</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    <label>Megnevezés:</label>
+    <input type="text" name="megnevezes" value="{{ muvelet.megnevezes }}" required>
+
+    <label>Költség:</label>
+    <input type="number" step="0.01" name="koltseg" value="{{ muvelet.koltseg }}" required>
+
+    <label>Normaidő (perc):</label>
+    <input type="number" step="0.01" name="normaido" value="{{ muvelet.normaido }}" required>
+
+    <button type="submit">Mentés</button>
+</form>
+{% endblock %}

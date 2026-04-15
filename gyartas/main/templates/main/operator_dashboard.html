@@ -1,0 +1,112 @@
+{% extends 'main/base.html' %}
+{% load tz %}
+
+{% block content %}
+
+<h1>Operátor felület</h1>
+
+
+<div class="user-card">
+    <h2>Üdv, {{ request.session.felhasznalonev }} operátor!</h2>
+
+    <p><strong>Szerepkör:</strong> Operátor</p>
+    <p><strong>Mai lejelentések:</strong> {{ mai_lejelentesek }}</p>
+    <p><strong>Aktív gyártások:</strong> {{ aktiv_gyartasok }}</p>
+</div>
+
+
+<div class="stats-container">
+    <div class="stat-card blue">
+        <h4>Mai jó darabok</h4>
+        <p>{{ jo_db_ma }}</p>
+    </div>
+
+    <div class="stat-card red">
+        <h4>Mai selejt</h4>
+        <p>{{ selejt_ma }}</p>
+    </div>
+
+    <div class="stat-card yellow">
+        <h4>Folyamatban</h4>
+        <p>{{ folyamatban }}</p>
+    </div>
+
+    <div class="stat-card green">
+        <h4>Lezárt gyártások</h4>
+        <p>{{ lezart }}</p>
+    </div>
+</div>
+
+
+<div class="menu-container">
+    <a href="/operator/gyartasok/" class="menu-item">📦 Gyártások megtekintése</a>
+    <a href="/operator/riport/" class="menu-item">📅 Napi riport</a>
+</div>
+
+
+<div class="illustration">
+    🏭
+</div>
+
+
+<style>
+    .user-card {
+        background: #f3f6ff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 25px;
+    }
+
+    .stats-container {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .stat-card {
+        flex: 1;
+        padding: 20px;
+        border-radius: 10px;
+        color: white;
+        text-align: center;
+        font-weight: bold;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .stat-card.blue { background: #3b82f6; }
+    .stat-card.red { background: #ef4444; }
+    .stat-card.yellow { background: #f59e0b; }
+    .stat-card.green { background: #10b981; }
+
+    .menu-container {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+    .menu-item {
+        background: #e5e7eb;
+        padding: 15px;
+        border-radius: 8px;
+        font-size: 18px;
+        text-decoration: none;
+        color: #111827;
+        font-weight: 600;
+        transition: 0.2s;
+    }
+
+    .menu-item:hover {
+        background: #d1d5db;
+    }
+
+    .illustration {
+        font-size: 80px;
+        text-align: center;
+        opacity: 0.25;
+        margin-top: 20px;
+    }
+</style>
+
+{% endblock %}

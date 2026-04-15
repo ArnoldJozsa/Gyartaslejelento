@@ -1,0 +1,31 @@
+{% extends 'main/base.html' %}
+{% load tz %}
+
+{% block content %}
+<h1>Új recept létrehozása</h1>
+
+<div class="form-card">
+<form method="POST">
+    {% csrf_token %}
+
+    <div class="form-group">
+        <label>Késztermék:</label>
+        <select name="kesztermek" required>
+            {% for k in kesztermekek %}
+                <option value="{{ k.cikkszam }}">{{ k.megnevezes }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Anyaghányad:</label>
+        <input type="number" step="0.01" name="anyaghanyad" required>
+    </div>
+
+    <button type="submit" class="btn-primary">
+        <i class="fa-solid fa-arrow-right"></i> Tovább
+    </button>
+</form>
+</div>
+
+{% endblock %}

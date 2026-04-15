@@ -1,0 +1,57 @@
+{% extends 'main/base.html' %}
+{% load tz %}
+
+{% block content %}
+<h1>Recept részletei</h1>
+
+<h3>Késztermék: {{ recept.kesztermek_cikkszam.megnevezes }}</h3>
+
+<h2>Recept sorok</h2>
+
+<table>
+    <tr>
+        <th>Sorrend</th>
+        <th>Művelet</th>
+        <th>Alapanyag</th>
+        <th>Mennyiség</th>
+    </tr>
+
+    {% for s in sorok %}
+    <tr>
+        <td>{{ s.sorrend }}</td>
+        <td>{{ s.muvelet.megnevezes }}</td>
+        <td>{{ s.alapanyag_cikkszam.megnevezes }}</td>
+        <td>{{ s.mennyiseg }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h2>Új sor hozzáadása</h2>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <label>Sorrend:</label>
+    <input type="number" name="sorrend" required>
+
+    <label>Művelet:</label>
+    <select name="muvelet" required>
+        {% for m in muveletek %}
+            <option value="{{ m.muvelet_id }}">{{ m.megnevezes }}</option>
+        {% endfor %}
+    </select>
+
+    <label>Alapanyag:</label>
+    <select name="alapanyag" required>
+        {% for a in alapanyagok %}
+            <option value="{{ a.cikkszam }}">{{ a }}</option>
+        {% endfor %}
+    </select>
+
+    <label>Mennyiség:</label>
+    <input type="number" step="0.01" name="mennyiseg" required>
+
+    <button type="submit">Hozzáadás</button>
+</form>
+
+{% endblock %}

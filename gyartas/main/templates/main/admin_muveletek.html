@@ -1,0 +1,53 @@
+{% extends 'main/base.html' %}
+{% load tz %}
+
+{% block content %}
+<h1>Műveletek kezelése</h1>
+
+
+<a href="/admin-panel/muveletek/uj/" class="btn-primary">
+    <i class="fa-solid fa-plus"></i> Új művelet
+</a>
+
+
+<div class="table-card">
+<table>
+    <tr>
+        <th>ID</th>
+        <th><i class="fa-solid fa-tag"></i> Megnevezés</th>
+        <th><i class="fa-solid fa-coins"></i> Költség</th>
+        <th><i class="fa-solid fa-clock"></i> Norma idő</th>
+        <th>Művelet</th>
+    </tr>
+
+    {% for m in muveletek %}
+    <tr>
+        <td>{{ m.muvelet_id }}</td>
+        <td>{{ m.megnevezes }}</td>
+
+        
+        <td>
+            <span class="badge badge-blue">{{ m.koltseg }}</span>
+        </td>
+
+        
+        <td>
+            <span class="badge badge-yellow">{{ m.normaido }} </span>
+        </td>
+
+        
+        <td>
+            <a href="/admin-panel/muveletek/{{ m.muvelet_id }}/szerkeszt/" class="btn-table edit">
+                <i class="fa-solid fa-pen"></i> Szerkesztés
+            </a>
+
+            <a href="/admin-panel/muveletek/{{ m.muvelet_id }}/torol/" class="btn-table delete">
+                <i class="fa-solid fa-trash"></i> Törlés
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+</div>
+
+{% endblock %}

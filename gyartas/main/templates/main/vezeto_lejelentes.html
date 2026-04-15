@@ -1,0 +1,31 @@
+{% extends 'main/base.html' %}
+{% load tz %}
+
+{% block content %}
+<h1>Gyártás lejelentése – {{ gyartas.kesztermek_cikkszam.megnevezes }}</h1>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <label>Bemenő darab:</label>
+    <input type="number" name="bemeno" value="{{ bemeno }}" readonly>
+
+    <label>Jó darab:</label>
+    <input type="number" name="jo" value="{{ osszes_jo }}" readonly>
+
+    <label>Selejt darab:</label>
+    <input type="number" name="selejt" value="{{ osszes_selejt }}" readonly>
+
+    
+
+    <button type="submit" style="
+        background:#3B82F6;
+        color:white;
+        padding:8px 16px;
+        border-radius:4px;
+        border:none;
+        margin-top:10px;
+    ">Mentés</button>
+</form>
+
+{% endblock %}

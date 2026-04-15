@@ -1,0 +1,81 @@
+{% extends 'main/base.html' %}
+{% load tz %}
+
+{% block content %}
+<h1>Gyártások kezelése</h1>
+
+<a href="/vezeto/" style="
+    display:inline-block;
+    margin-bottom:15px;
+    text-decoration:none;
+    background:#ddd;
+    padding:6px 12px;
+    border-radius:4px;
+">← Vissza</a>
+
+<table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse; width:100%;">
+    <tr style="background:#f0f0f0;">
+        <th>ID</th>
+        <th>Késztermék</th>
+        <th>Partner</th>
+        <th>Tervezett mennyiség</th>
+        <th>Jó mennyiség</th>
+        <th>Selejt</th>
+        <th>Státusz</th>
+        <th>Létrehozva</th>
+        <th>Lezárva</th>
+        <th>Művelet</th>
+    </tr>
+
+    {% for g in gyartasok %}
+    <tr>
+        <td>{{ g.gyartas_id }}</td>
+        <td>{{ g.kesztermek_cikkszam.megnevezes }}</td>
+        <td>{{ g.partner.partner_nev }}</td>
+        <td>{{ g.tervezett_mennyiseg }}</td>
+        <td>{{ g.jo_mennyiseg }}</td>
+        <td>{{ g.selejt_mennyiseg }}</td>
+
+        
+        <td>{{ g.statusz_display }}</td>
+
+        <td>{{ g.letrehozas_datuma|localtime|date:"Y-m-d H:i"  }}</td>
+        <td>{{ g.lezaras_datuma|localtime|date:"Y-m-d H:i" |default:"-" }}</td>
+
+
+        <td style="white-space: nowrap;">
+
+            
+            <a href="/vezeto/gyartas/{{ g.gyartas_id }}/"
+               style="background:#3B82F6; color:white; padding:6px 12px;
+                      border-radius:4px; text-decoration:none;
+                      display:inline-block; margin-bottom:6px;">
+               Megnyitás
+            </a>
+
+            
+            {% if g.statusz_display == 'tervezett' %}
+            <a href="/vezeto/gyartas/{{ g.gyartas_id }}/indit/"
+               style="background:#10B981; color:white; padding:6px 12px;
+                      border-radius:4px; text-decoration:none;
+                      display:inline-block; margin-bottom:6px;">
+               Indítás
+            </a>
+            {% endif %}
+
+            
+            {% if g.statusz_display == 'lezárásra vár' %}
+            <a href="/vezeto/gyartas/{{ g.gyartas_id }}/lezar/"
+               style="background:#EF4444; color:white; padding:6px 12px;
+                      border-radius:4px; text-decoration:none;
+                      display:inline-block;">
+               Lezárás
+            </a>
+            {% endif %}
+
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'main/base.html' %}
+{% load tz %}
+
+{% block content %}
+<h1>Új készlet hozzáadása</h1>
+
+<div class="form-card">
+<form method="POST">
+    {% csrf_token %}
+
+    <div class="form-group">
+        <label>Alapanyag:</label>
+        <select name="cikk" required>
+            <option value="">Válassz alapanyagot...</option>
+            {% for a in alapanyagok %}
+                <option value="{{ a.cikkszam }}">{{ a.megnevezes }} ({{ a.cikkszam }})</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Mennyiség:</label>
+        <input type="number" step="0.01" name="mennyiseg" required>
+    </div>
+
+    <button type="submit" class="btn-primary">
+        <i class="fa-solid fa-plus"></i> Hozzáadás
+    </button>
+
+    <a href="/admin-panel/keszlet/" class="btn-secondary" style="margin-top:10px; display:block; text-align:center;">
+        <i class="fa-solid fa-arrow-left"></i> Vissza
+    </a>
+
+</form>
+</div>
+
+{% endblock %}

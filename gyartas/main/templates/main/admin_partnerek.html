@@ -1,0 +1,46 @@
+{% extends 'main/base.html' %}
+{% load tz %}
+
+{% block content %}
+<h1>Partnerek</h1>
+
+<a href="/admin-panel/partnerek/uj/" class="btn-primary">
+    <i class="fa-solid fa-plus"></i> Új partner
+</a>
+
+<div class="table-card">
+<table>
+    <tr>
+        <th><i class="fa-solid fa-building"></i> Név</th>
+        <th><i class="fa-solid fa-id-card"></i> Adószám</th>
+        <th><i class="fa-solid fa-location-dot"></i> Cím</th>
+        <th><i class="fa-solid fa-envelope"></i> Email</th>
+        <th><i class="fa-solid fa-phone"></i> Telefon</th>
+        <th>Művelet</th>
+    </tr>
+
+    {% for p in partnerek %}
+    <tr>
+        <td>{{ p.partner_nev }}</td>
+        <td>
+            <span class="badge badge-blue">{{ p.adoszam }}</span>
+        </td>
+        <td>{{ p.cim }}</td>
+        <td>{{ p.email }}</td>
+        <td>{{ p.telefonszam }}</td>
+
+        <td>
+            <a href="/admin-panel/partner/{{ p.partner_id }}/szerkeszt/" class="btn-table edit">
+                <i class="fa-solid fa-pen"></i> Szerkesztés
+            </a>
+
+            <a href="/admin-panel/partner/{{ p.partner_id }}/torol/" class="btn-table delete">
+                <i class="fa-solid fa-trash"></i> Törlés
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+</div>
+
+{% endblock %}

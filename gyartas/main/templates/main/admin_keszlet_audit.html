@@ -1,0 +1,59 @@
+{% extends 'main/base.html' %}
+{% load tz %}
+
+{% block content %}
+<h1>Készlet felhasználás – Audit napló</h1>
+
+<table class="table table-striped table-bordered mt-4">
+    <thead class="table-dark">
+        <tr>
+            <th>Cikk</th>
+            <th>Mennyiség</th>
+            <th>Típus</th>
+            <th>Gyártás</th>
+            <th>Felhasználó</th>
+            <th>Dátum</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for m in mozgások %}
+        <tr>
+            <td>{{ m.cikk.megnevezes }} ({{ m.cikk.cikkszam }})</td>
+
+            <td>
+                {% if m.mennyiseg < 0 %}
+                    <span style="color:red; font-weight:bold;">{{ m.mennyiseg }}</span>
+                {% else %}
+                    <span style="color:green; font-weight:bold;">+{{ m.mennyiseg }}</span>
+                {% endif %}
+            </td>
+
+            <td>{{ m.get_tipus_display }}</td>
+
+            <td>
+                {% if m.gyartas %}
+                    #{{ m.gyartas.gyartas_id }} – {{ m.gyartas.kesztermek_cikkszam.megnevezes }}
+                {% else %}
+                    –
+                {% endif %}
+            </td>
+
+            <td>
+                {% if m.felhasznalo_nev %}
+                    {{ m.felhasznalo_nev }}
+                {% else %}
+                    –
+                {% endif %}
+            </td>
+
+            <td>{{ m.datum|localtime|date:"Y-m-d H:i" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6" class="text-center">Nincs rögzített készletmozgás.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

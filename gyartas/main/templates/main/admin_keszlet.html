@@ -1,0 +1,67 @@
+{% extends 'main/base.html' %}
+{% load tz %}
+
+{% block content %}
+<h1>Készlet</h1>
+
+<a href="{% url 'admin_keszlet_uj' %}" class="btn btn-primary mb-3">
+    + Új készlet hozzáadása
+</a>
+<a href="{% url 'admin_keszlet_audit' %}" class="btn btn-secondary mb-3">
+
+    📊 Készlet felhasználás (audit)
+</a>
+
+
+<h2>Késztermékek</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Cikkszám</th>
+            <th>Megnevezés</th>
+            <th>Mennyiség</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for k in kesztermekek %}
+        <tr>
+            <td>{{ k.cikk.cikkszam }}</td>
+            <td>{{ k.cikk.megnevezes }}</td>
+            <td>{{ k.mennyiseg }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3">Nincs késztermék készlet.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Alapanyagok</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Cikkszám</th>
+            <th>Megnevezés</th>
+            <th>Mennyiség</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for k in alapanyagok %}
+        <tr>
+            <td>{{ k.cikk.cikkszam }}</td>
+            <td>{{ k.cikk.megnevezes }}</td>
+            <td style="{% if k.mennyiseg < 50 %}color:red; font-weight:bold;{% endif %}">
+                {{ k.mennyiseg }}
+            </td>
+
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3">Nincs alapanyag készlet.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

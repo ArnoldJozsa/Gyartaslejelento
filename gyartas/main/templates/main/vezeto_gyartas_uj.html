@@ -1,0 +1,52 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+
+<h1>Új gyártás indítása</h1>
+
+{% if error %}
+<div style="background:#ffdddd; border:1px solid #ff8888; padding:10px; margin-bottom:15px; color:#a00000;">
+    {{ error }}
+</div>
+{% endif %}
+
+<div class="form-card">
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label>Késztermék:</label>
+            <select name="kesztermek" required>
+                {% for k in kesztermekek %}
+                    <option value="{{ k.cikkszam }}">{{ k.megnevezes }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Partner:</label>
+            <select name="partner" required>
+                {% for p in partnerek %}
+                    <option value="{{ p.partner_id }}">{{ p.partner_nev }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Adószám:</label>
+            <input type="text" name="nav_adoszam">
+        </div>
+
+        <div class="form-group" style="margin-top: 20px;">
+            <label>Mennyiség:</label>
+            <input type="number" name="mennyiseg" required>
+        </div>
+
+        <button type="submit" class="btn-primary">
+            Gyártás létrehozása
+        </button>
+
+    </form>
+</div>
+
+{% endblock %}

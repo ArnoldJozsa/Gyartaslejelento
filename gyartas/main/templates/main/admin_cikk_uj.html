@@ -1,0 +1,56 @@
+{% extends 'main/base.html' %}
+{% load tz %}
+
+{% block content %}
+<h1>Új cikk hozzáadása</h1>
+
+<div class="form-card">
+<form method="POST">
+    {% csrf_token %}
+
+    <div class="form-group">
+        <label>Cikkszám:</label>
+        <input type="text" name="cikkszam" required>
+    </div>
+
+    <div class="form-group">
+        <label>Megnevezés:</label>
+        <input type="text" name="megnevezes" required>
+    </div>
+
+    <div class="form-group">
+        <label>Típus:</label>
+        <select name="tipus">
+            <option value="alapanyag">Alapanyag</option>
+            <option value="kesztermek">Késztermék</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Minőség:</label>
+        <input type="text" name="minoseg">
+    </div>
+
+    <div class="form-group">
+        <label>Magasság (mm):</label>
+        <input type="number" step="0.01" name="magassag">
+    </div>
+
+    <div class="form-group">
+        <label>Szélesség (mm):</label>
+        <input type="number" step="0.01" name="szelesseg">
+    </div>
+
+    <div class="form-group">
+        <label>Hosszúság (mm):</label>
+        <input type="number" step="0.01" name="hosszusag">
+    </div>
+
+    <button type="submit" class="btn-primary">
+        <i class="fa-solid fa-save"></i> Mentés
+    </button>
+
+</form>
+</div>
+
+{% endblock %}

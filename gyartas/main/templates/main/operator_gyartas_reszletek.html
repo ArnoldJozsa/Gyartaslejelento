@@ -1,0 +1,133 @@
+{% extends 'main/base.html' %}
+{% load tz %}
+
+{% block content %}
+
+<style>
+    /* A base.css felülírása erős szelektorokkal */
+    .table-card {
+        background: #ffffff !important;
+        padding: 35px !important;
+        border-radius: 16px !important;
+        max-width: 1100px !important;
+        margin: 0 auto !important;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.15) !important;
+    }
+
+    .table-card h2 {
+        color: #1E3A8A !important;
+        font-size: 32px !important;
+        margin-bottom: 25px !important;
+        font-weight: 800 !important;
+    }
+
+    .table-card table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        border-radius: 14px !important;
+        overflow: hidden !important;
+        font-size: 20px !important;
+        background: white !important;
+    }
+
+    .table-card thead {
+        background: #1E3A8A !important;
+        color: white !important;
+    }
+
+    .table-card thead tr:hover {
+        background: #1E3A8A !important;
+        color: white !important;
+    }
+
+    .table-card th,
+    .table-card td {
+        padding: 18px 16px !important;
+        border-bottom: 1px solid #E5E7EB !important;
+        font-size: 20px !important;
+    }
+
+    .table-card tbody tr:hover {
+        background: #F3F4F6 !important;
+    }
+
+    .status-badge {
+        padding: 10px 16px !important;
+        border-radius: 8px !important;
+        font-weight: 700 !important;
+        font-size: 18px !important;
+        display: inline-block !important;
+    }
+
+    .badge-yellow { background: #fef3c7 !important; color: #92400e !important; }
+    .badge-green { background: #d1fae5 !important; color: #065f46 !important; }
+    .badge-gray  { background: #e5e7eb !important; color: #374151 !important; }
+
+    .btn-table.edit {
+        background: #3B82F6 !important;
+        color: white !important;
+        padding: 12px 20px !important;
+        border-radius: 8px !important;
+        text-decoration: none !important;
+        font-weight: 700 !important;
+        font-size: 18px !important;
+        transition: 0.2s !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+    }
+
+    .btn-table.edit:hover {
+        background: #2563EB !important;
+    }
+
+</style>
+
+
+<div class="table-card">
+    <h2>Műveletek</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Sorrend</th>
+                <th>Művelet</th>
+                <th>Jó</th>
+                <th>Selejt</th>
+                <th>Állapot</th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+        {% for s in sorok %}
+            <tr>
+                <td>{{ s.sorrend }}</td>
+                <td>{{ s.muvelet.megnevezes }}</td>
+                <td>{{ s.jo_db }}</td>
+                <td>{{ s.selejt_db }}</td>
+
+                {% if s.jo_db == 0 and s.selejt_db == 0 and s == kov_sor %}
+                    <td><span class="status-badge badge-yellow">Következő</span></td>
+                    <td>
+                        <a href="/operator/gyartas/sor/{{ s.gyartas_sor_id }}/lejelentes/"
+                           class="btn-table edit">
+                           <i class="fa-solid fa-pen"></i> Lejelentés
+                        </a>
+                    </td>
+
+                {% elif s.jo_db > 0 or s.selejt_db > 0 %}
+                    <td><span class="status-badge badge-green">Kész</span></td>
+                    <td></td>
+
+                {% else %}
+                    <td><span class="status-badge badge-gray">Zárolva</span></td>
+                    <td></td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

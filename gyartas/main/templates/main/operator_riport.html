@@ -1,0 +1,176 @@
+{% extends 'main/base.html' %}
+{% load tz %}
+
+{% block content %}
+
+<style>
+    .riport-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 25px;
+    }
+
+    .riport-title {
+        font-size: 34px;
+        font-weight: 800;
+        color: #1E3A8A;
+        margin-bottom: 30px;
+    }
+
+    .gyartas-blokk {
+        background: #ffffff;
+        padding: 25px;
+        border-radius: 14px;
+        margin-bottom: 35px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+    }
+
+    .gyartas-fejlec {
+        font-size: 26px;
+        font-weight: 700;
+        margin-bottom: 10px;
+        color: #1E3A8A;
+    }
+
+    .gyartas-osszegzes {
+        font-size: 18px;
+        margin-bottom: 20px;
+        color: #374151;
+    }
+
+    .riport-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 18px;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .riport-table thead {
+        background: #1E3A8A;
+        color: white;
+    }
+
+    .riport-table th,
+    .riport-table td {
+        padding: 14px 12px;
+        border-bottom: 1px solid #E5E7EB;
+    }
+
+    .riport-table tbody tr:hover {
+        background: #F3F4F6;
+    }
+
+    .export-gombok {
+        margin-top: 25px;
+        display: flex;
+        gap: 15px;
+    }
+
+    .btn-export {
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 18px;
+        font-weight: 700;
+        text-decoration: none;
+        color: white;
+        display: inline-block;
+    }
+
+    .btn-excel { background: #10B981; }
+    .btn-excel:hover { background: #059669; }
+
+    .btn-pdf { background: #EF4444; }
+    .btn-pdf:hover { background: #DC2626; }
+</style>
+
+
+<div class="riport-container">
+
+    <h1 class="riport-title">Napi riport – {{ datum }}</h1>
+    <form method="GET" style="margin-bottom: 25px;">
+    <label style="font-size:18px; font-weight:600;">Dátum kiválasztása:</label>
+    <input type="date" name="datum" value="{{ datum }}" 
+           style="padding:8px; font-size:16px; margin-left:10px;">
+    <button type="submit" style="
+        padding:8px 16px;
+        background:#1E3A8A;
+        color:white;
+        border:none;
+        border-radius:6px;
+        font-size:16px;
+        margin-left:10px;
+    ">Lekérdezés</button>
+</form>
+
+    {% regroup sorok by gyartas.gyartas_id as gyartasok %}
+
+    
+
+    {% for gy in gyartasok %}
+    <div class="gyartas-blokk">
+
+        {% with gy.list.0 as elso %}
+        <div class="gyartas-fejlec">
+            Gyártás #{{ gy.grouper }} – 
+            {% if elso.gyartas_sor %}
+                {{ elso.gyartas_sor.gyartas.partner.partner_nev }}
+            {% else %}
+                {{ elso.gyartas.partner.partner_nev }}
+            {% endif %}
+        </div>
+        {% endwith %}
+
+        {# ÖSSZEGZÉS KÉSZÍTÉSE #}
+        {% with 0 as osszes_jo %}
+        {% with 0 as osszes_selejt %}
+            {% for s in gy.list %}
+                {% with osszes_jo|add:s.jo_db as osszes_jo %}{% endwith %}
+                {% with osszes_selejt|add:s.selejt_db as osszes_selejt %}{% endwith %}
+            {% endfor %}
+
+        {% endwith %}
+        {% endwith %}
+
+        <table class="riport-table">
+            <thead>
+                <tr>
+                    <th>Művelet</th>
+                    <th>Jó</th>
+                    <th>Selejt</th>
+                    <th>Felhasználó</th>
+                    <th>Idő</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            {% for s in gy.list %}
+                <tr>
+                    <td>
+                        {% if s.gyartas_sor %}
+                            {{ s.gyartas_sor.muvelet.megnevezes }}
+                        {% else %}
+                            Teljes gyártás
+                        {% endif %}
+                    </td>
+                    <td>{{ s.jo_db }}</td>
+                    <td>{{ s.selejt_db }}</td>
+                    <td>{{ s.felhasznalo.teljes_nev }}</td>
+                    <td>{{ s.datum|localtime|date:"Y-m-d H:i"  }}</td>
+
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+    {% endfor %}
+
+    <div class="export-gombok">
+        <a href="/operator/riport/export/?datum={{ datum }}" class="btn-export btn-excel">📊 Excel export</a>
+        <a href="/operator/riport/pdf/?datum={{ datum }}" class="btn-export btn-pdf">📕 PDF export</a>
+    </div>
+
+</div>
+
+{% endblock %}

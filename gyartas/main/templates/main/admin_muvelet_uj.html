@@ -1,0 +1,33 @@
+{% extends 'main/base.html' %}
+{% load tz %}
+
+{% block content %}
+<h1>Új művelet felvétele</h1>
+
+<div class="form-card">
+<form method="POST">
+    {% csrf_token %}
+
+    <div class="form-group">
+        <label>Megnevezés:</label>
+        <input type="text" name="megnevezes" required>
+    </div>
+
+    <div class="form-group">
+        <label>Költség:</label>
+        <input type="number" step="0.01" name="koltseg" required>
+    </div>
+
+    <div class="form-group">
+        <label>Normaidő (perc):</label>
+        <input type="number" step="0.01" name="normaido" required>
+    </div>
+
+    <button type="submit" class="btn-primary">
+        <i class="fa-solid fa-save"></i> Mentés
+    </button>
+
+</form>
+</div>
+
+{% endblock %}

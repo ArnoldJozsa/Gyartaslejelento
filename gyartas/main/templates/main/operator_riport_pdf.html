@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="hu">
+    {% load tz %}
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th {
+            background: #4a90e2;
+            color: white;
+            padding: 8px;
+            border: 1px solid #333;
+        }
+        td {
+            padding: 8px;
+            border: 1px solid #333;
+        }
+        .footer {
+            margin-top: 40px;
+            text-align: right;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Napi gyártási riport – {{ datum }}</h1>
+
+<table border="1" cellspacing="0" cellpadding="6" width="100%">
+    <tr style="background:#D9E1F2; font-weight:bold;">
+        <th>Gyártás ID</th>
+        <th>Partner</th>
+        <th>Művelet</th>
+        <th>Felhasználó</th>
+        <th>Jó db</th>
+        <th>Selejt db</th>
+        <th>Dátum</th>
+    </tr>
+
+    {% for s in sorok %}
+    <tr>
+        <td>
+            {% if s.gyartas_sor %}
+                {{ s.gyartas_sor.gyartas.gyartas_id }}
+            {% else %}
+                {{ s.gyartas.gyartas_id }}
+            {% endif %}
+        </td>
+        <td>
+        {% if s.gyartas_sor %}
+            {{ s.gyartas_sor.gyartas.partner.partner_nev }}
+        {% else %}
+            {{ s.gyartas.partner.partner_nev }}
+        {% endif %}
+        </td>
+
+        <td>
+            {% if s.gyartas_sor %}
+                {{ s.gyartas_sor.muvelet.megnevezes }}
+            {% else %}
+                Teljes gyártás
+            {% endif %}
+        </td>
+
+        <td>{{ s.felhasznalo.teljes_nev }}</td>
+        <td>{{ s.jo_db }}</td>
+        <td>{{ s.selejt_db }}</td>
+        <td>{{ s.datum|localtime|date:"Y-m-d H:i" }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+
+<div class="footer">
+    Generálva: {{ generated_at|localtime|date:"Y-m-d H:i" }}
+</div>
+
+
+</body>
+</html>

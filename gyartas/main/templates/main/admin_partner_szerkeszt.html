@@ -1,0 +1,29 @@
+{% extends 'main/base.html' %}
+{% load tz %}
+
+{% block content %}
+<h1>Partner szerkesztése</h1>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <label>Név:</label>
+    <input type="text" name="partner_nev" value="{{ partner.partner_nev }}" required>
+
+    <label>Adószám:</label>
+    <input type="text" name="adoszam" value="{{ partner.adoszam }}">
+
+    <label>Cím:</label>
+    <input type="text" name="cim" value="{{ partner.cim }}">
+
+    <label>Email:</label>
+    <input type="email" name="email" value="{{ partner.email }}">
+
+    <label>Telefon:</label>
+    <input type="text" name="telefonszam" value="{{ partner.telefonszam }}">
+
+    <button type="submit">Mentés</button>
+</form>
+
+<a href="/admin-panel/partnerek/">Vissza a listához</a>
+{% endblock %}
